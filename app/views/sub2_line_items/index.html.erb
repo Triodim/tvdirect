@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Sub2 Line Items</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Product</th>
+      <th>Sub2 category</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @sub2_line_items.each do |sub2_line_item| %>
+      <tr>
+        <td><%= sub2_line_item.product %></td>
+        <td><%= sub2_line_item.sub2_category %></td>
+        <td><%= link_to 'Show', sub2_line_item %></td>
+        <td><%= link_to 'Edit', edit_sub2_line_item_path(sub2_line_item) %></td>
+        <td><%= link_to 'Destroy', sub2_line_item, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Sub2 Line Item', new_sub2_line_item_path %>
