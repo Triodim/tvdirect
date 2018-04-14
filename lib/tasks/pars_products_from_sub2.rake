@@ -27,7 +27,7 @@ namespace :utils do
         begin
           page = agent.get("#{cat.url}?___from_store=en&___store=en&limit=64&p=#{i}")#geting the first page of sub1_category
         rescue Mechanize::RedirectLimitReachedError => error
-          puts "This page is not available for parsing" + error.message
+          puts "This #{cat.url} page is not available for parsing" + error.message
           i += 1
       next
         end
