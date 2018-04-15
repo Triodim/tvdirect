@@ -17,7 +17,14 @@ namespace :utils do
 
       while i <= i_max
 
+        begin
         page = agent.get("#{cat.url}?___from_store=en&___store=en&limit=64&p=#{i}")#geting the first page of main category
+        rescue Mechanize::RedirectLimitReachedError => error
+          puts "This #{cat.url} page is not available for parsing" + error.message
+          i += 1
+          next
+        end
+
 
         #find the number of pages "i_max" for each main category with 64 grid
         counter = page.search("//a[contains(@href,'#{cat.url.to_s}?___from_store=en&___store=en&limit=64&p=')]/text()").to_a

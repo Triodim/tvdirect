@@ -9,9 +9,14 @@ namespace :utils do
 
     agent = Mechanize.new()
 
-    page = agent.get("https://www.tvdirect.tv/health?___from_store=th&___store=en")
+    begin
+      page = agent.get("https://www.tvdirect.tv/health?___from_store=th&___store=en")
+      rescue Mechanize::RedirectLimitReachedError => error
+      puts "The main page is not available for parsing" + error.message
+      i += 1
+      next
+    end
 
-      #puts page.body
 
     #name_list = page.search("//a[starts-with(@class, 'level')]/text()").to_a #find all categories's names
     url_list = page.search("//a[starts-with(@class, 'level0')]/@href").to_a   #find all main categories's urls
