@@ -9,12 +9,6 @@ namespace :utils do
     Sub2LineItem.delete_all #Clear all rows in existing sub1_line_items table before fill it with new data
 
     hash = Sub2Category.all
-=begin
-    sub2 = Sub2Category.find_by(id: 86)
-    page = agent.get("#{sub2.url}?___from_store=en&___store=en&limit=64&p=1")
-    products_list = page.search("//li[starts-with(@class, 'item')]").to_a.first
-    puts product_name = products_list.attributes["data-product-name"].to_s
-=end
 
     hash.each do |cat|
 
@@ -53,8 +47,7 @@ namespace :utils do
            product_price = product.search("span[@class = 'price']/text()").to_a.first.to_s.rstrip.chomp("Baht").strip.gsub(",","")
            product_sku = product.attributes["data-product-sku"].to_s
            product_url = product.search("a[@class = 'cover_link']/@href").to_s
-          #puts "Decimal Price => " + BigDecimal.new(product_price).to_s
-          #puts " "
+       
 
           #Creat product and line_item for it
           products = Product.find_by(url: product_url)
