@@ -1,10 +1,7 @@
 # README
 
 rake tasks launch sequence:
-1 - pars_categories
-2 - pars_sub1_categories
-3 - pars_sub2_categories
-
+- pars_categories_sub1_sub2  
 then in any order
  - pars_products_from_main_categories 
  - pars_products_from_sub1_categories
