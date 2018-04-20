@@ -1,0 +1,116 @@
+[33mcommit 396838d5b83f6353c9daa57ab53711848e31c6d0[m
+Author: Dmitriy <tds050680@gmail.com>
+Date:   Sun Apr 15 14:56:10 2018 +0300
+
+    Add redirect exeption
+
+[1mdiff --git a/lib/tasks/pars_categories.rake b/lib/tasks/pars_categories.rake[m
+[1mindex bbda3b2..f7de4b5 100755[m
+[1m--- a/lib/tasks/pars_categories.rake[m
+[1m+++ b/lib/tasks/pars_categories.rake[m
+[36m@@ -9,9 +9,14 @@[m [mnamespace :utils do[m
+ [m
+     agent = Mechanize.new()[m
+ [m
+[31m-    page = agent.get("https://www.tvdirect.tv/health?___from_store=th&___store=en")[m
+[32m+[m[32m    begin[m[41m[m
+[32m+[m[32m      page = agent.get("https://www.tvdirect.tv/health?___from_store=th&___store=en")[m[41m[m
+[32m+[m[32m      rescue Mechanize::RedirectLimitReachedError => error[m[41m[m
+[32m+[m[32m      puts "The main page is not available for parsing" + error.message[m[41m[m
+[32m+[m[32m      i += 1[m[41m[m
+[32m+[m[32m      next[m[41m[m
+[32m+[m[32m    end[m[41m[m
+ [m
+[31m-      #puts page.body[m
+ [m
+     #name_list = page.search("//a[starts-with(@class, 'level')]/text()").to_a #find all categories's names[m
+     url_list = page.search("//a[starts-with(@class, 'level0')]/@href").to_a   #find all main categories's urls[m
+[1mdiff --git a/lib/tasks/pars_products_from_main.rake b/lib/tasks/pars_products_from_main.rake[m
+[1mindex fe9112c..3e7a223 100755[m
+[1m--- a/lib/tasks/pars_products_from_main.rake[m
+[1m+++ b/lib/tasks/pars_products_from_main.rake[m
+[36m@@ -17,7 +17,14 @@[m [mnamespace :utils do[m
+ [m
+       while i <= i_max[m
+ [m
+[32m+[m[32m        begin[m[41m[m
+         page = agent.get("#{cat.url}?___from_store=en&___store=en&limit=64&p=#{i}")#geting the first page of main category[m
+[32m+[m[32m        rescue Mechanize::RedirectLimitReachedError => error[m[41m[m
+[32m+[m[32m          puts "This #{cat.url} page is not available for parsing" + error.message[m[41m[m
+[32m+[m[32m          i += 1[m[41m[m
+[32m+[m[32m          next[m[41m[m
+[32m+[m[32m        end[m[41m[m
+[32m+[m[41m[m
+ [m
+         #find the number of pages "i_max" for each main category with 64 grid[m
+         counter = page.search("//a[contains(@href,'#{cat.url.to_s}?___from_store=en&___store=en&limit=64&p=')]/text()").to_a[m
+[1mdiff --git a/lib/tasks/pars_products_from_sub1.rake b/lib/tasks/pars_products_from_sub1.rake[m
+[1mindex 4f9014d..b9ba49a 100755[m
+[1m--- a/lib/tasks/pars_products_from_sub1.rake[m
+[1m+++ b/lib/tasks/pars_products_from_sub1.rake[m
+[36m@@ -18,7 +18,15 @@[m [mnamespace :utils do[m
+ [m
+       while i <= i_max[m
+ [m
+[32m+[m[32m        begin[m[41m[m
+         page = agent.get("#{cat.url}?___from_store=en&___store=en&limit=64&p=#{i}")#geting the first page of sub1_category[m
+[32m+[m[32m        rescue Mechanize::RedirectLimitReachedError => error[m[41m[m
+[32m+[m[32m          puts "This #{cat.url} page is not available for parsing" + error.message[m[41m[m
+[32m+[m[32m          i += 1[m[41m[m
+[32m+[m[32m          next[m[41m[m
+[32m+[m[32m        end[m[41m[m
+[32m+[m[41m[m
+[32m+[m[41m[m
+ [m
+         #find the number of pages "i_max" for each sub1_category with 64 grid[m
+         counter = page.search("//a[contains(@href,'#{cat.url.to_s}?___from_store=en&___store=en&limit=64&p=')]/text()").to_a[m
+[1mdiff --git a/lib/tasks/pars_products_from_sub2.rake b/lib/tasks/pars_products_from_sub2.rake[m
+[1mindex 9fef7ed..036f962 100755[m
+[1m--- a/lib/tasks/pars_products_from_sub2.rake[m
+[1m+++ b/lib/tasks/pars_products_from_sub2.rake[m
+[36m@@ -27,7 +27,7 @@[m [mnamespace :utils do[m
+         begin[m
+           page = agent.get("#{cat.url}?___from_store=en&___store=en&limit=64&p=#{i}")#geting the first page of sub1_category[m
+         rescue Mechanize::RedirectLimitReachedError => error[m
+[31m-          puts "This page is not available for parsing" + error.message[m
+[32m+[m[32m          puts "This #{cat.url} page is not available for parsing" + error.message[m[41m[m
+           i += 1[m
+       next[m
+         end[m
+[1mdiff --git a/lib/tasks/pars_sub1_categories.rake b/lib/tasks/pars_sub1_categories.rake[m
+[1mindex bc6753f..3d4fce0 100755[m
+[1m--- a/lib/tasks/pars_sub1_categories.rake[m
+[1m+++ b/lib/tasks/pars_sub1_categories.rake[m
+[36m@@ -7,7 +7,13 @@[m [mnamespace :utils do[m
+ [m
+     agent = Mechanize.new()[m
+ [m
+[32m+[m[32m    begin[m[41m[m
+     page = agent.get("https://www.tvdirect.tv/health?___from_store=th&___store=en")[m
+[32m+[m[32m    rescue Mechanize::RedirectLimitReachedError => error[m[41m[m
+[32m+[m[32m      puts "The main page is not available for parsing" + error.message[m[41m[m
+[32m+[m[32m      i += 1[m[41m[m
+[32m+[m[32m      next[m[41m[m
+[32m+[m[32m    end[m[41m[m
+ [m
+     sub1_url_list = page.search("//a[starts-with(@class, 'level1')]/@href").to_a   #find all subcategories's urls[m
+ [m
+[1mdiff --git a/lib/tasks/pars_sub2_categories.rake b/lib/tasks/pars_sub2_categories.rake[m
+[1mindex 6b61c17..fa3ee05 100755[m
+[1m--- a/lib/tasks/pars_sub2_categories.rake[m
+[1m+++ b/lib/tasks/pars_sub2_categories.rake[m
+[36m@@ -8,7 +8,13 @@[m [mnamespace :utils do[m
+ [m
+     agent = Mechanize.new()[m
+ [m
+[31m-    page = agent.get("https://www.tvdirect.tv/health?___from_store=th&___store=en")[m
+[32m+[m[32m    begin[m[41m[m
+[32m+[m[32m      page = agent.get("https://www.tvdirect.tv/health?___from_store=th&___store=en")[m[41m[m
+[32m+[m[32m      rescue Mechanize::RedirectLimitReachedError => error[m[41m[m
+[32m+[m[32m        puts "The main page is not available for parsing" + error.message[m[41m[m
+[32m+[m[32m        i += 1[m[41m[m
+[32m+[m[32m      next[m[41m[m
+[32m+[m[32m    end[m[41m[m
+ [m
+     sub2_url_list = page.search("//a[starts-with(@class, 'level2')]/@href").to_a   #find all sub2categories's urls[m
+ [m

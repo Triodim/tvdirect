@@ -46,8 +46,6 @@ namespace :utils do
            product_price = product.search("span[@class = 'price']/text()").to_a.first.to_s.rstrip.chomp("Baht").strip.gsub(",","")
            product_sku = product.attributes["data-product-sku"].to_s
            product_url = product.search("a[@class = 'cover_link']/@href").to_s
-          #puts "Decimal Price => " + BigDecimal.new(product_price).to_s
-          #puts " "
 
           #Creat product and line_item for it
           products = Product.find_by(url: product_url)
